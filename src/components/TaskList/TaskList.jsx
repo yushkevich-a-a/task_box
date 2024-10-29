@@ -1,13 +1,30 @@
 /* eslint-disable react/prop-types */
-
-import PropTypes from 'prop-types';
 import { Task } from './../Task';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateTaskState } from '../../lib/store';
 
-export const TaskList = ({ loading, tasks, onPinTask, onArchiveTask }) => {
-  const events = {
-    onPinTask,
-    onArchiveTask,
+export const TaskList = () => {
+  const tasks = useSelector((state) => {
+    const tasksInOrder = [
+      ...state.taskbox.tasks.filter((t) => t.state !== 'TASK_INBOX'),
+      ...state.taskbox.tasks.filter((t) => t.state !== 'TASK_PINNED')
+    ];
+    const filteredTasks = tasksInOrder.filter(
+      (t) => t.state === 'TASK_INBOX' || t.state === 'TASK_PINNED'
+    );
+    return filteredTasks;
+  })
+
+  const { status } = useSelector((state => state.taskbox))
+  const dispatch = useDispatch();
+
+  const pinTask = (id) => {
+    updateTaskState(dispatch({id, newTaskState: 'TASK_PINNED'}))
   };
+  const archiveTask = (id) => {
+    updateTaskState(dispatch({id, newTaskState: 'TASK_ARCHIVED'}))
+  };
+
   const LoadingRow = (
     <div className="loading-item">
       <span className="glow-checkbox" />
@@ -16,7 +33,8 @@ export const TaskList = ({ loading, tasks, onPinTask, onArchiveTask }) => {
       </span>
     </div>
   );
-  if (loading) {
+
+  if (status === 'loading') {
     return (
       <div className="list-items" data-testid="loading" key={"loading"}>
         {LoadingRow}
@@ -40,26 +58,11 @@ export const TaskList = ({ loading, tasks, onPinTask, onArchiveTask }) => {
     );
   }
 
-  const tasksInOrder = [
-    ...tasks.filter((t) => t.state === 'TASK_PINNED'),
-    ...tasks.filter((t) => t.state !== 'TASK_PINNED'),
-  ];
   return (
     <div className="list-items">
-      {tasksInOrder.map((task) => (
-        <Task key={task.id} task={task} {...events} />
+      {tasks.map((task) => (
+        <Task key={task.id} task={task} onPinTask={(id) => pinTask(id)} onArchiveTask={(id) => archiveTask(id)}/>
       ))}
     </div>
   );
-}
-
-TaskList.PropTypes = {
-  loading: PropTypes.bool,
-  tasks: PropTypes.arrayOf(Task.PropTypes.task).isRequired,
-  onPinTask: PropTypes.func,
-  onArchiveTask: PropTypes.func,
-}
-
-TaskList.defaultProps = {
-  loading: false,
 }
