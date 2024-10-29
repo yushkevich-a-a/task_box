@@ -5,7 +5,7 @@ import  { Provider } from "react-redux";
 import { configureStore, createSlice } from '@reduxjs/toolkit';
 
 
-const MockedState = {    
+export const MockedState = {    
   tasks: [
     { ...TaskStories.Default.args.task, id: '1', title: 'Task 1' },
     { ...TaskStories.Default.args.task, id: '2', title: 'Task 2' },
@@ -20,7 +20,7 @@ const MockedState = {
 
 /* создание моккового хранилища */
 // eslint-disable-next-line react/prop-types
-const Mockstore = ({taskboxState, children}) => (
+export const Mockstore = ({taskboxState, children}) => (
   <Provider
     store={configureStore({
       reducer: {
