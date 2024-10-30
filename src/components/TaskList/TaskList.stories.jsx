@@ -20,7 +20,7 @@ export const MockedState = {
 
 /* создание моккового хранилища */
 // eslint-disable-next-line react/prop-types
-export const Mockstore = ({taskboxState, children}) => (
+const Mockstore = ({taskboxState, children}) => (
   <Provider
     store={configureStore({
       reducer: {

@@ -19,10 +19,10 @@ export const TaskList = () => {
   const dispatch = useDispatch();
 
   const pinTask = (id) => {
-    updateTaskState(dispatch({id, newTaskState: 'TASK_PINNED'}))
+    dispatch(updateTaskState({id, newTaskState: 'TASK_PINNED'}))
   };
   const archiveTask = (id) => {
-    updateTaskState(dispatch({id, newTaskState: 'TASK_ARCHIVED'}))
+    dispatch(updateTaskState({id, newTaskState: 'TASK_ARCHIVED'}))
   };
 
   const LoadingRow = (
